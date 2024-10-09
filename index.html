@@ -1,0 +1,231 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sklep Muzyczny - Perkusje</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f4f4f4;
+        }
+        header {
+            background-color: #333;
+            color: white;
+            padding: 10px 0;
+            text-align: center;
+        }
+        nav {
+            background-color: #444;
+            padding: 10px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+        nav ul {
+            list-style: none;
+            margin: 0;
+            padding: 0;
+        }
+        nav ul li {
+            display: inline;
+            margin: 0 15px;
+        }
+        nav ul li a {
+            color: white;
+            text-decoration: none;
+            font-weight: bold;
+        }
+        .cart {
+            margin-left: auto;
+            color: white;
+            font-weight: bold;
+            cursor: pointer;
+        }
+        .banner {
+            text-align: center;
+            color: black;
+            margin-bottom: 20px;
+        }
+        .banner h1 {
+            font-size: 2.5em;
+        }
+        .category {
+            display: flex;
+            justify-content: center;
+            flex-wrap: wrap;
+            margin: 0 0 20px 0;
+        }
+        .category div {
+            margin: 10px;
+            text-align: center;
+            flex-basis: 20%;
+        }
+        .category div img {
+            width: 200px;
+            height: 200px;
+            object-fit: contain;
+        }
+        .category div button {
+            padding: 10px;
+            background-color: #28a745;
+            color: white;
+            border: none;
+            cursor: pointer;
+            margin-top: 10px;
+        }
+        footer {
+            background-color: #333;
+            color: white;
+            text-align: center;
+            padding: 10px 0;
+            position: static;
+            bottom: 0;
+            width: 100%;
+        }
+        .cart-items {
+            background-color: white;
+            border: 1px solid #ddd;
+            padding: 20px;
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            width: 300px;
+            height: 400px;
+            overflow-y: scroll;
+            display: none;
+        }
+        .cart-items h2 {
+            text-align: center;
+        }
+        .cart-items ul {
+            list-style: none;
+            padding: 0;
+        }
+        .cart-items ul li {
+            margin: 10px 0;
+            display: flex;
+            justify-content: space-between;
+        }
+        .cart-items .close-cart {
+            text-align: right;
+            cursor: pointer;
+            color: red;
+        }
+    </style>
+</head>
+<body>
+
+<header>
+    <h1>Sklep Muzyczny - Perkusje</h1>
+</header>
+
+<nav>
+    <ul>
+        <li><a href="#perkusje">Perkusje</a></li>
+        <li><a href="#kontakt">Kontakt</a></li>
+    </ul>
+    <div class="cart" onclick="toggleCart()">🛒 Koszyk (<span id="cart-count">0</span>)</div>
+</nav>
+
+<div class="banner">
+    <h1>Witamy w naszym sklepie perkusyjnym</h1>
+</div>
+
+<section id="perkusje">
+    <div class="category">
+        <div>
+            <img src="dw.png" alt="Perkusja Akustyczna-">
+            <p>Perkusja Akustyczna - 2000 zł</p>
+            <button onclick="addToCart('Perkusja Akustyczna', 2000)">Dodaj do koszyka</button>
+        </div>
+        <div>
+            <img src="yam.png" alt="Perkusja Elektroniczna">
+            <p>Perkusja Elektroniczna - 2500 zł</p>
+            <button onclick="addToCart('Perkusja Elektroniczna', 2500)">Dodaj do koszyka</button>
+        </div>
+        <div>
+            <img src="zil.png" alt="Talerze">
+            <p>Talerze - 800 zł</p>
+            <button onclick="addToCart('Talerze', 800)">Dodaj do koszyka</button>
+        </div>
+        <div>
+            <img src="kon.png" alt="Konga">
+            <p>Konga - 1200 zł</p>
+            <button onclick="addToCart('Konga', 1200)">Dodaj do koszyka</button>
+        </div>
+        <div>
+            <img src="bon.png" alt="Bongosy">
+            <p>Pearl HWP-2010 Hardware Set - 4600zł</p>
+            <button onclick="addToCart('Bongosy', 500)">Dodaj do koszyka</button>
+        </div>
+        <div>
+            <img src="wer.png" alt="Werbel">
+            <p>Werbel DW- 700 zł</p>
+            <button onclick="addToCart('Werbel', 700)">Dodaj do koszyka</button>
+        </div>
+        <div>
+            <img src="tam.png" alt="Tamburyn">
+            <p>Trick Drums Big Foot Black Widow Pedal ltd
+                15 - 5500zł</p>
+            <button onclick="addToCart('Tamburyn', 150)">Dodaj do koszyka</button>
+        </div>
+    </div>
+</section>
+
+<!-- Koszyk Modal -->
+<div class="cart-items" id="cart-items">
+    <h2>Koszyk</h2>
+    <ul id="cart-list">
+        <!-- Produkty zostaną dodane dynamicznie -->
+    </ul>
+    <div class="close-cart" onclick="toggleCart()">Zamknij</div>
+</div>
+
+<footer>
+    <p>&copy; 2024 Sklep Muzyczny. Wszystkie prawa zastrzeżone.</p>
+</footer>
+
+<script>
+    let cart = [];
+    let cartCountElement = document.getElementById('cart-count');
+    let cartItemsElement = document.getElementById('cart-items');
+    let cartListElement = document.getElementById('cart-list');
+
+    function addToCart(productName, productPrice) {
+        cart.push({ name: productName, price: productPrice });
+        updateCart();
+    }
+
+    function updateCart() {
+        cartCountElement.innerText = cart.length;
+        cartListElement.innerHTML = '';
+        cart.forEach((item, index) => {
+            cartListElement.innerHTML += `
+                <li>
+                    ${item.name} - ${item.price} zł
+                    <button onclick="removeFromCart(${index})">Usuń</button>
+                </li>
+            `;
+        });
+    }
+
+    function removeFromCart(index) {
+        cart.splice(index, 1);
+        updateCart();
+    }
+
+    function toggleCart() {
+        if (cartItemsElement.style.display === 'none' || cartItemsElement.style.display === '') {
+            cartItemsElement.style.display = 'block';
+        } else {
+            cartItemsElement.style.display = 'none';
+        }
+    }
+</script>
+
+</body>
+</html>
+
